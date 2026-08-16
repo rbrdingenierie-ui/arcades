@@ -1065,6 +1065,9 @@ const MATIERES = [
   {
     nom: "Droit", icone: "⚖️",
     themes: [
+      { numero: "💡", nom: "Méthodologie du droit", arcades: [
+        { icone: "🕹️", titre: "Arcade de méthodologie", desc: "Bientôt disponible.", lien: null },
+      ]},
       { numero: 1, nom: "Qu'est-ce que le droit ?", arcades: [
         { icone: "🕹️", titre: "Arcade du thème 1", desc: "Bientôt disponible.", lien: null },
       ]},
@@ -1082,6 +1085,9 @@ const MATIERES = [
   {
     nom: "Économie", icone: "📈",
     themes: [
+      { numero: "💡", nom: "Méthodologie de l'économie", arcades: [
+        { icone: "🕹️", titre: "Arcade de méthodologie", desc: "Bientôt disponible.", lien: null },
+      ]},
       { numero: 1, nom: "Quelles sont les grandes questions économiques et leurs enjeux actuels ?", arcades: [
         { icone: "🕹️", titre: "Arcade du thème 1", desc: "Bientôt disponible.", lien: null },
       ]},
@@ -1183,8 +1189,11 @@ function dessinerArcades() {
       teteTheme.className = "theme-tete";
       teteTheme.setAttribute("aria-expanded", "false");
       teteTheme.setAttribute("aria-controls", idTheme);
+      // un thème hors programme n'a pas de numéro : on annonce son seul nom
+      var prefixe = (typeof theme.numero === "number")
+        ? "Thème " + theme.numero + " : " : "";
       teteTheme.setAttribute("aria-label",
-        "Thème " + theme.numero + " : " + theme.nom + ". "
+        prefixe + theme.nom + ". "
         + (dispo === 0 ? "Aucune arcade disponible."
                        : dispo + (dispo > 1 ? " arcades disponibles." : " arcade disponible.")));
       teteTheme.innerHTML =
