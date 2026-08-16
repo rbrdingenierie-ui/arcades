@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- fond rond : donne du contraste dans l'onglet, clair comme sombre -->
+  <circle cx="32" cy="32" r="32" fill="#1F3864"/>
+  <!-- halo doux derriere la borne -->
+  <circle cx="32" cy="31" r="22" fill="#2C4A7C"/>
+
+  <defs>
+    <linearGradient id="corps" x1="0%" y1="0%" x2="100%" y2="10%">
+      <stop offset="0%" stop-color="#9878D0"/>
+      <stop offset="34%" stop-color="#7E5CB8"/>
+      <stop offset="72%" stop-color="#5E3E96"/>
+      <stop offset="100%" stop-color="#2A1848"/>
+    </linearGradient>
+    <linearGradient id="flanc" x1="0%" y1="0%" x2="100%" y2="8%">
+      <stop offset="0%" stop-color="#5E3E96"/>
+      <stop offset="60%" stop-color="#3A2264"/>
+      <stop offset="100%" stop-color="#1E1236"/>
+    </linearGradient>
+    <radialGradient id="ecran" cx="34%" cy="28%" r="80%">
+      <stop offset="0%" stop-color="#A8FFF0"/>
+      <stop offset="40%" stop-color="#3FCBAA"/>
+      <stop offset="100%" stop-color="#0E6E62"/>
+    </radialGradient>
+  </defs>
+
+  <!-- le flanc droit, en perspective -->
+  <path d="M45 13 L51 9 L51 51 L45 55 Z" fill="url(#flanc)" stroke="#12161E" stroke-width="1.6"/>
+  <!-- le fronton, dessus visible -->
+  <path d="M19 13 L25 9 L51 9 L45 13 Z" fill="#8A68C4" stroke="#12161E" stroke-width="1.4"/>
+
+  <!-- le corps de la borne -->
+  <path d="M19 55 L19 17 Q19 13 24 13 L40 13 Q45 13 45 17 L45 55 Q45 57 42 57 L22 57 Q19 57 19 55 Z"
+        fill="url(#corps)" stroke="#12161E" stroke-width="1.8"/>
+  <!-- l'arete lumineuse, a gauche -->
+  <path d="M21 16 Q21 14.5 24 14.5 L24 56 L21 56 Z" fill="#C8B4EC" opacity="0.3"/>
+
+  <!-- l'ecran-visage -->
+  <rect x="22" y="17" width="20" height="17" rx="3.5" fill="#0A1A20" stroke="#12161E" stroke-width="1.4"/>
+  <rect x="23.4" y="18.4" width="17.2" height="14.2" rx="2.6" fill="url(#ecran)"/>
+  <!-- les yeux, carres facon pixel -->
+  <rect x="26.4" y="21.6" width="4" height="5.2" rx="1.4" fill="#08201E"/>
+  <rect x="27" y="22.2" width="1.6" height="2" rx="0.8" fill="#DFFFF8"/>
+  <rect x="33.6" y="21.6" width="4" height="5.2" rx="1.4" fill="#08201E"/>
+  <rect x="34.2" y="22.2" width="1.6" height="2" rx="0.8" fill="#DFFFF8"/>
+  <!-- le sourire -->
+  <path d="M27.6 29.4 Q32 32.4 36.4 29.4" stroke="#08201E" stroke-width="1.7"
+        fill="none" stroke-linecap="round"/>
+  <!-- reflet sur la vitre -->
+  <path d="M24.4 19 L28.4 19 L25 32 L24 32 Z" fill="#FFFFFF" opacity="0.2"/>
+
+  <!-- le tableau de bord -->
+  <path d="M20 37 L44 37 L43 43 L21 43 Z" fill="#3E2668" stroke="#12161E" stroke-width="1.2"/>
+  <!-- le joystick -->
+  <rect x="25.4" y="38.6" width="1.8" height="4.4" rx="0.9" fill="#9AA4BC"/>
+  <circle cx="26.3" cy="38" r="2.4" fill="#F08040" stroke="#12161E" stroke-width="0.9"/>
+  <circle cx="25.6" cy="37.3" r="0.8" fill="#FFD0A8" opacity="0.8"/>
+  <!-- les boutons -->
+  <circle cx="33" cy="40" r="2" fill="#E8483A" stroke="#12161E" stroke-width="0.8"/>
+  <circle cx="38.4" cy="40" r="2" fill="#F0C020" stroke="#12161E" stroke-width="0.8"/>
+
+  <!-- le bandeau lumineux -->
+  <rect x="22" y="47" width="20" height="4.4" rx="2.2" fill="#1A0E30" stroke="#12161E" stroke-width="0.9"/>
+  <rect x="23.2" y="48.2" width="4" height="2" rx="1" fill="#3FCBAA"/>
+  <rect x="28" y="48.2" width="4" height="2" rx="1" fill="#F0C020"/>
+  <rect x="32.8" y="48.2" width="4" height="2" rx="1" fill="#E8483A"/>
+  <rect x="37.6" y="48.2" width="3.2" height="2" rx="1" fill="#7FFFE8"/>
+
+  <!-- quelques etoiles de Mnemosia -->
+  <circle cx="10" cy="17" r="1.5" fill="#F0DCAE" opacity="0.9"/>
+  <circle cx="55" cy="22" r="1.2" fill="#E8F0FF" opacity="0.85"/>
+  <circle cx="12" cy="45" r="1.1" fill="#E8F0FF" opacity="0.8"/>
+  <circle cx="54" cy="44" r="1.4" fill="#F0DCAE" opacity="0.85"/>
+</svg>
