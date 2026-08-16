@@ -183,49 +183,122 @@
     color: rgba(255,255,255,0.88); margin: 0;
   }
 
-  /* ---------- les arcades ---------- */
-  h2.section-titre {
-    font-size: calc(17px * var(--a11y-scale)); font-weight: 800; margin: 0 0 12px;
-  }
-  .arcades { display: flex; flex-direction: column; gap: 12px; }
-  .arcade {
-    display: flex; align-items: center; gap: 14px;
-    background: var(--white); border: 2px solid var(--track); border-radius: 16px;
-    padding: 15px 16px; text-decoration: none; color: var(--navy);
-    transition: border-color 0.16s ease, transform 0.12s ease, box-shadow 0.16s ease;
-    box-shadow: 0 2px 6px -2px rgba(31,56,100,0.2);
-  }
-  .arcade:hover {
-    border-color: var(--violet); transform: translateY(-2px);
-    box-shadow: 0 6px 14px -4px rgba(31,56,100,0.32);
-  }
-  .arcade:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
-  .arcade-numero {
-    flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: calc(16px * var(--a11y-scale)); font-weight: 800; color: #FFFFFF;
-    background: linear-gradient(160deg, #7E5CB8 0%, #5E3E96 46%, #2A1848 100%);
-    border: 2px solid #12161E;
-    box-shadow: inset 2px 2px 0 rgba(200,180,236,0.34), inset -2px -2px 0 rgba(0,0,0,0.36);
-  }
-  .arcade-texte { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-  .arcade-titre { font-size: calc(15.5px * var(--a11y-scale)); font-weight: 800; }
-  .arcade-desc { font-size: calc(13px * var(--a11y-scale)); color: var(--navy-soft); line-height: 1.45; }
-  .arcade-fleche { font-size: 20px; color: var(--violet); flex-shrink: 0; font-weight: 700; }
+  /* ---------- l'accordéon : matière, puis thème, puis arcades ---------- */
 
-  /* une arcade encore fermee */
-  .arcade.a-venir {
-    background: #EFF1F6; border-style: dashed; cursor: default;
-    color: var(--navy-soft); box-shadow: none;
+  /* niveau 1 : la matière */
+  .matiere { margin-bottom: 12px; }
+  .matiere-tete {
+    width: 100%; display: flex; align-items: center; gap: 13px;
+    font-family: inherit; text-align: left; cursor: pointer;
+    background: linear-gradient(160deg, #2C4A7C 0%, #1F3864 55%, #16294D 100%);
+    color: #FFFFFF; border: 2px solid #0E1A30; border-radius: 16px;
+    padding: 15px 16px; min-height: 60px;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2),
+                inset -2px -2px 0 rgba(0,0,0,0.28),
+                0 3px 8px -2px rgba(31,56,100,0.35);
   }
-  .arcade.a-venir:hover { transform: none; border-color: var(--track); box-shadow: none; }
-  .arcade.a-venir .arcade-numero { filter: grayscale(0.75) brightness(0.72); }
-  .arcade.a-venir .arcade-fleche { color: var(--navy-soft); }
-  .arcade-etiquette {
-    font-size: calc(12px * var(--a11y-scale)); font-weight: 700;
+  .matiere-tete:hover { filter: brightness(1.14); }
+  .matiere-tete:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .matiere-icone { font-size: 24px; flex-shrink: 0; line-height: 1; }
+  .matiere-texte { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .matiere-nom { font-size: calc(16.5px * var(--a11y-scale)); font-weight: 800; }
+  .matiere-compte {
+    font-size: calc(12.5px * var(--a11y-scale)); font-weight: 600;
+    color: #C8D4E8;
+  }
+  .chevron {
+    flex-shrink: 0; font-size: 15px; line-height: 1;
+    transition: transform 0.22s ease;
+  }
+  [aria-expanded="true"] > .chevron { transform: rotate(90deg); }
+
+  .matiere-corps { padding: 12px 0 4px 14px; }
+  .matiere-corps[hidden] { display: none; }
+
+  /* niveau 2 : le thème */
+  .theme { margin-bottom: 9px; }
+  .theme-tete {
+    width: 100%; display: flex; align-items: center; gap: 11px;
+    font-family: inherit; text-align: left; cursor: pointer;
+    background: var(--white); color: var(--navy);
+    border: 2px solid var(--track); border-radius: 13px;
+    padding: 12px 14px; min-height: 52px;
+  }
+  .theme-tete:hover { border-color: var(--violet); }
+  .theme-tete:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .theme-numero {
+    flex-shrink: 0; width: 30px; height: 30px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: calc(13.5px * var(--a11y-scale)); font-weight: 800; color: #FFFFFF;
+    background: linear-gradient(160deg, #7E5CB8 0%, #5E3E96 50%, #2A1848 100%);
+    border: 1.6px solid #12161E;
+  }
+  .theme-nom {
+    flex: 1; font-size: calc(14px * var(--a11y-scale)); font-weight: 700;
+    line-height: 1.4;
+  }
+  .theme-etiquette {
+    flex-shrink: 0; font-size: calc(11.5px * var(--a11y-scale)); font-weight: 700;
+    color: var(--navy-soft); background: #EFF1F6;
+    border: 1.5px solid var(--track); border-radius: 999px; padding: 3px 9px;
+  }
+  .theme-corps { padding: 9px 0 4px 16px; }
+  .theme-corps[hidden] { display: none; }
+
+  /* niveau 3 : l'arcade */
+  .arcades { display: flex; flex-direction: column; gap: 9px; }
+  .arcade {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--white); border: 2px solid var(--track); border-radius: 13px;
+    padding: 12px 14px; text-decoration: none; color: var(--navy); min-height: 56px;
+    transition: border-color 0.16s ease, transform 0.12s ease;
+  }
+  .arcade:hover { border-color: var(--violet); transform: translateY(-2px); }
+  .arcade:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .arcade-icone { font-size: 22px; flex-shrink: 0; line-height: 1; }
+  .arcade-texte { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .arcade-titre { font-size: calc(14.5px * var(--a11y-scale)); font-weight: 800; }
+  .arcade-desc { font-size: calc(12.5px * var(--a11y-scale)); color: var(--navy-soft); line-height: 1.45; }
+  .arcade-fleche { font-size: 19px; color: var(--violet); flex-shrink: 0; font-weight: 700; }
+
+  /* une arcade encore fermée */
+  .arcade.a-venir {
+    background: #EFF1F6; border-style: dashed; cursor: default; color: var(--navy-soft);
+  }
+  .arcade.a-venir:hover { transform: none; border-color: var(--track); }
+  .arcade.a-venir .arcade-icone { filter: grayscale(0.8) opacity(0.6); }
+  .arcade-verrou {
+    flex-shrink: 0; font-size: calc(11.5px * var(--a11y-scale)); font-weight: 700;
     color: var(--navy-soft); background: #FFFFFF;
     border: 1.5px solid var(--track); border-radius: 999px; padding: 4px 10px;
   }
+
+  /* un thème sans arcade ouverte */
+  .theme-vide {
+    font-size: calc(12.5px * var(--a11y-scale)); font-style: italic;
+    color: var(--navy-soft); margin: 0; padding: 8px 4px;
+  }
+
+  body.a11y-contrast .theme-tete,
+  body.a11y-contrast .arcade { border-color: #000000; }
+  body.a11y-contrast .arcade-desc,
+  body.a11y-contrast .arcade-titre,
+  body.a11y-contrast .theme-nom { color: #000000; }
+  body.a11y-contrast .matiere-tete { background: #000000; border-color: #000000; }
+  body.a11y-contrast .matiere-compte { color: #FFFFFF; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chevron, .arcade { transition: none !important; }
+  }
+  body.anim-allegee .chevron,
+  body.anim-allegee .arcade { transition: none !important; }
+
+  @media (max-width: 560px) {
+    .matiere-corps { padding-left: 6px; }
+    .theme-corps { padding-left: 8px; }
+    .theme-etiquette { display: none; }
+  }
+
 
   .pied-actions { display: flex; gap: 11px; flex-wrap: wrap; margin-top: 24px; }
   .btn-pied {
@@ -303,8 +376,8 @@
       <h1 class="entete-titre">🕹️ Les Arcades de Mnémosia</h1>
       <p class="entete-classe">BTS BQE 2e année</p>
       <p class="entete-sous">
-        <span class="falc-normal-content">Chaque chapitre a son arcade : le cours à écouter, à lire, à jouer.</span>
-        <span class="falc-simple-content">Chaque chapitre a sa page de jeux.<br>Choisis un chapitre.</span>
+        <span class="falc-normal-content">Le cours à écouter, à lire, à jouer — matière par matière.</span>
+        <span class="falc-simple-content">Choisis une matière.<br>Tu verras ses jeux.</span>
       </p>
     </div>
 
@@ -313,9 +386,6 @@
       <div class="arcades" id="listeArcades"></div>
 
       <div class="pied-actions">
-        <a class="btn-pied" href="https://rbrdingenierie-ui.github.io/accueil_outils/"
-           title="Ouvrir l'espace de révision"
-           aria-label="Mon espace de révision — ouvrir le village de Mnémosia">🚀 Mon espace de révision</a>
         <button type="button" class="btn-pied" id="btnDeconnexion"
                 title="Se déconnecter"
                 aria-label="Retour sur la planète Terre — se déconnecter de ton espace">🌍 Retour sur la planète Terre</button>
@@ -565,24 +635,22 @@
 // ============================================================
 //  LE MENU DES ARCADES
 //
-//  POUR AJOUTER UN CHAPITRE : ajoutez une ligne dans ARCADES.
-//  - lien : l'adresse complete de l'arcade,
-//           ou null si le chapitre n'est pas encore ouvert.
-//  Rien d'autre a modifier.
+//  POUR AJOUTER UNE ARCADE : ajoutez une ligne à la liste
+//  « arcades » de la matière concernée.
+//    - lien : l'adresse complète de l'arcade,
+//             ou null si elle n'est pas encore ouverte.
+//  Rien d'autre à modifier.
 // ============================================================
 
-const CLASSE = "BTS2BQE2627";
-
-const ARCADES = [
-  { numero: 1, titre: "Apprendre à apprendre",
-    desc: "Podcast, bande dessinée, jeux, flashcards et quiz.",
-    lien: "https://rbrdingenierie-ui.github.io/arcade/" },
-  { numero: 2, titre: "Chapitre 2",
-    desc: "Bientôt disponible.",
-    lien: null },
-  { numero: 3, titre: "Chapitre 3",
-    desc: "Bientôt disponible.",
-    lien: null },
+const MATIERES = [
+  { nom: "CESBF", icone: "🏦",
+    arcades: [
+      { icone: "🕹️", titre: "Première arcade", desc: "Bientôt disponible.", lien: null },
+    ]},
+  { nom: "VOJES", icone: "📊",
+    arcades: [
+      { icone: "🕹️", titre: "Première arcade", desc: "Bientôt disponible.", lien: null },
+    ]},
 ];
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -606,39 +674,156 @@ const MENU_URL = "https://rbrdingenierie-ui.github.io/menu_revision/";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+function echapper(t) {
+  return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// Compte les arcades ouvertes d'une matière : l'apprenant sait d'un coup d'oeil
+// s'il y a quelque chose a y faire, sans avoir a la deplier.
+function compterOuvertes(matiere) {
+  var n = 0;
+  // une matière peut contenir des thèmes, ou directement des arcades
+  if (matiere.arcades) {
+    matiere.arcades.forEach(function (a) { if (a.lien) n++; });
+    return n;
+  }
+  (matiere.themes || []).forEach(function (t) {
+    t.arcades.forEach(function (a) { if (a.lien) n++; });
+  });
+  return n;
+}
+
+// Fabrique la carte d'une arcade, ouverte ou verrouillée.
+function fabriquerArcade(a) {
+  var ouverte = !!a.lien;
+  var el = document.createElement(ouverte ? "a" : "div");
+  el.className = "arcade" + (ouverte ? "" : " a-venir");
+  if (ouverte) {
+    el.href = a.lien;
+    el.setAttribute("aria-label", a.titre + ". " + a.desc);
+  } else {
+    // une arcade fermée n'est pas un lien : rien à activer
+    el.setAttribute("aria-label", a.titre + ". Pas encore disponible.");
+  }
+  el.innerHTML =
+    '<span class="arcade-icone" aria-hidden="true">' + a.icone + '</span>'
+    + '<span class="arcade-texte">'
+    +   '<span class="arcade-titre">' + echapper(a.titre) + '</span>'
+    +   '<span class="arcade-desc">' + echapper(a.desc) + '</span>'
+    + '</span>'
+    + (ouverte
+        ? '<span class="arcade-fleche" aria-hidden="true">→</span>'
+        : '<span class="arcade-verrou">🔒 Bientôt</span>');
+  return el;
+}
+
 function dessinerArcades() {
-  const liste = document.getElementById("listeArcades");
+  var liste = document.getElementById("listeArcades");
   liste.innerHTML = "";
 
-  ARCADES.forEach(a => {
-    const ouverte = !!a.lien;
-    const el = document.createElement(ouverte ? "a" : "div");
-    el.className = "arcade" + (ouverte ? "" : " a-venir");
+  MATIERES.forEach(function (matiere, im) {
+    var ouvertes = compterOuvertes(matiere);
+    var idCorps = "matiere-" + im;
 
-    if (ouverte) {
-      el.href = a.lien;
-      el.setAttribute("aria-label",
-        "Chapitre " + a.numero + " : " + a.titre + ". " + a.desc);
-    } else {
-      // une arcade fermee n'est pas un lien : rien a activer, rien a annoncer
-      el.setAttribute("aria-label",
-        "Chapitre " + a.numero + " : " + a.titre + ". Pas encore disponible.");
+    var bloc = document.createElement("div");
+    bloc.className = "matiere";
+
+    // ---- la matière ----
+    var tete = document.createElement("button");
+    tete.type = "button";
+    tete.className = "matiere-tete";
+    tete.setAttribute("aria-expanded", "false");
+    tete.setAttribute("aria-controls", idCorps);
+    var motCompte = ouvertes === 0 ? "aucune arcade disponible"
+                  : ouvertes === 1 ? "1 arcade disponible"
+                  : ouvertes + " arcades disponibles";
+    var nbThemes = matiere.themes ? matiere.themes.length : 0;
+    tete.innerHTML =
+      '<span class="matiere-icone" aria-hidden="true">' + matiere.icone + '</span>'
+      + '<span class="matiere-texte">'
+      +   '<span class="matiere-nom">' + echapper(matiere.nom) + '</span>'
+      +   '<span class="matiere-compte">'
+      +     (nbThemes ? nbThemes + (nbThemes > 1 ? ' thèmes · ' : ' thème · ') : '')
+      +     motCompte + '</span>' 
+      + '</span>'
+      + '<span class="chevron" aria-hidden="true">▶</span>';
+
+    var corps = document.createElement("div");
+    corps.className = "matiere-corps";
+    corps.id = idCorps;
+    corps.hidden = true;
+
+    // ---- les arcades, directement sous la matière ----
+    if (matiere.arcades) {
+      var directes = document.createElement("div");
+      directes.className = "arcades";
+      matiere.arcades.forEach(function (a) { directes.appendChild(fabriquerArcade(a)); });
+      corps.appendChild(directes);
     }
 
-    el.innerHTML =
-      '<span class="arcade-numero" aria-hidden="true">' + a.numero + '</span>'
-      + '<span class="arcade-texte">'
-      +   '<span class="arcade-titre">' + a.titre + '</span>'
-      +   '<span class="arcade-desc">' + a.desc + '</span>'
-      + '</span>'
-      + (ouverte
-          ? '<span class="arcade-fleche" aria-hidden="true">→</span>'
-          : '<span class="arcade-etiquette">🔒 Bientôt</span>');
+    // ---- les thèmes, quand il y en a ----
+    (matiere.themes || []).forEach(function (theme, it) {
+      var idTheme = "theme-" + im + "-" + it;
+      var dispo = theme.arcades.filter(function (a) { return a.lien; }).length;
 
-    liste.appendChild(el);
+      var blocTheme = document.createElement("div");
+      blocTheme.className = "theme";
+
+      var teteTheme = document.createElement("button");
+      teteTheme.type = "button";
+      teteTheme.className = "theme-tete";
+      teteTheme.setAttribute("aria-expanded", "false");
+      teteTheme.setAttribute("aria-controls", idTheme);
+      teteTheme.setAttribute("aria-label",
+        "Thème " + theme.numero + " : " + theme.nom + ". "
+        + (dispo === 0 ? "Aucune arcade disponible."
+                       : dispo + (dispo > 1 ? " arcades disponibles." : " arcade disponible.")));
+      teteTheme.innerHTML =
+        '<span class="theme-numero" aria-hidden="true">' + theme.numero + '</span>'
+        + '<span class="theme-nom">' + echapper(theme.nom) + '</span>'
+        + (dispo > 0
+            ? '<span class="theme-etiquette" aria-hidden="true">' + dispo + '</span>'
+            : '<span class="theme-etiquette" aria-hidden="true">🔒</span>')
+        + '<span class="chevron" aria-hidden="true">▶</span>';
+
+      var corpsTheme = document.createElement("div");
+      corpsTheme.className = "theme-corps";
+      corpsTheme.id = idTheme;
+      corpsTheme.hidden = true;
+
+      var listeArcades = document.createElement("div");
+      listeArcades.className = "arcades";
+
+      theme.arcades.forEach(function (a) {
+        listeArcades.appendChild(fabriquerArcade(a));
+      });
+
+      corpsTheme.appendChild(listeArcades);
+      teteTheme.addEventListener("click", function () { basculer(teteTheme, corpsTheme); });
+
+      blocTheme.appendChild(teteTheme);
+      blocTheme.appendChild(corpsTheme);
+      corps.appendChild(blocTheme);
+    });
+
+    tete.addEventListener("click", function () { basculer(tete, corps); });
+
+    bloc.appendChild(tete);
+    bloc.appendChild(corps);
+    liste.appendChild(bloc);
   });
 
+  // la première matière est dépliée : l'apprenant voit tout de suite du contenu
+  var premiere = liste.querySelector(".matiere-tete");
+  if (premiere) basculer(premiere, document.getElementById("matiere-0"));
+
   if (typeof attachHoverReadAll === "function") attachHoverReadAll();
+}
+
+function basculer(bouton, corps) {
+  var ouvert = bouton.getAttribute("aria-expanded") === "true";
+  bouton.setAttribute("aria-expanded", ouvert ? "false" : "true");
+  corps.hidden = ouvert;
 }
 
 onAuthStateChanged(auth, (user) => {
