@@ -1059,6 +1059,19 @@
 //    - lien : l'adresse complète de l'arcade,
 //             ou null si elle n'est pas encore ouverte.
 //  Rien d'autre à modifier.
+//
+//  POUR FERMER UNE ARCADE SANS PERDRE SON ADRESSE :
+//  deplacez la valeur de « lien » vers « lienArchive ». Le menu
+//  l'affichera comme « Bientot », mais vous garderez l'adresse.
+//
+//    { icone: "\u{1F579}\uFE0F", titre: "Le bail d'habitation",
+//      desc: "Podcast, BD et jeux.",
+//      lien: null,
+//      lienArchive: "https://.../arcade-bail/" },
+//
+//  ATTENTION : cela retire l'arcade du menu, mais son adresse reste
+//  accessible a qui la connait. Pour la fermer reellement, renommez
+//  son dossier sur GitHub — l'ancienne adresse ne repondra plus.
 // ============================================================
 
 const MATIERES = [
