@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>BTS CJN 2e année — Les Arcades de Mnémosia</title>
+<style>
+  :root {
+    --navy: #1F3864;
+    --navy-soft: #4A5C82;
+    --orange: #E0591F;
+    --teal: #168F7F;
+    --gold: #B08D57;
+    --violet: #5E3E96;
+    --bg: #F7F8FA;
+    --white: #FFFFFF;
+    --track: #8592B0;
+    --a11y-scale: 1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--navy);
+  }
+  .page { max-width: 880px; margin: 0 auto; padding: 18px 16px 40px; }
+
+  .lien-evitement {
+    position: fixed; left: -9999px; top: 0; z-index: 999;
+    background: var(--navy); color: #FFFFFF; font-weight: 700;
+    padding: 12px 20px; border-radius: 0 0 12px 0; text-decoration: none;
+    font-size: calc(14px * var(--a11y-scale));
+  }
+  .lien-evitement:focus { left: 0; outline: 3px solid var(--gold); outline-offset: -3px; }
+
+  .a11y-bar {
+    display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    background:var(--white); border:2px solid var(--track); border-radius:14px;
+    padding:12px 16px; margin-bottom:24px;
+  }
+
+  /* une fois que l'apprenant descend dans la page, la barre reste accessible en haut.
+     Version compacte : elle ne doit pas manger l'ecran, surtout sur telephone. */
+  .a11y-bar.figee {
+    position:fixed; top:8px; left:50%; transform:translateX(-50%);
+    width:calc(100% - 20px); max-width:860px; z-index:1400;
+    padding:8px 12px; gap:7px; margin-bottom:0;
+    box-shadow:0 4px 18px rgba(31,56,100,0.18);
+  }
+  .a11y-bar.figee .a11y-toggle-btn { font-size:12px; padding:6px 11px; }
+  .a11y-bar.figee .a11y-bar-label { font-size:12px; }
+  .a11y-bar.figee .a11y-size-group { font-size:12px; }
+  .a11y-bar.figee .a11y-size-group button { width:30px; height:30px; font-size:13px; }
+
+  /* sur telephone, l'ecran est etroit : on reduit encore pour laisser voir le contenu */
+  @media (max-width: 620px) {
+    .a11y-bar.figee { padding:6px 8px; gap:5px; top:5px; }
+    .a11y-bar.figee .a11y-toggle-btn { font-size:11px; padding:5px 9px; }
+    .a11y-bar.figee .a11y-bar-label { font-size:11px; }
+    .a11y-bar.figee .a11y-size-group { font-size:11px; gap:4px; }
+    .a11y-bar.figee .a11y-size-group button { width:28px; height:28px; font-size:12px; }
+  }
+  /* remplace la barre dans le flux, pour que le contenu ne remonte pas d'un coup */
+  .a11y-bar-espace { display:none; }
+  .a11y-bar-espace.actif { display:block; }
+  .a11y-bar-label { font-size:13px; font-weight:800; color:var(--navy); margin-right:4px; }
+  .a11y-toggle-btn {
+    font-family:inherit; font-size:13px; font-weight:700; color:var(--navy-soft);
+    background:var(--white); border:2px solid var(--track); border-radius:999px;
+    padding:8px 14px; cursor:pointer;
+  }
+  .a11y-toggle-btn:hover { border-color:var(--navy-soft); }
+  .a11y-toggle-btn[aria-pressed="true"] { background:var(--navy); border-color:var(--navy); color:#FFFFFF; }
+  .a11y-size-group { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:700; color:var(--navy); }
+  .a11y-size-group button {
+    font-family:inherit; font-weight:800; font-size:14px; color:var(--navy);
+    background:var(--white); border:2px solid var(--navy-soft); border-radius:8px;
+    width:34px; height:34px; cursor:pointer;
+  }
+  .a11y-size-group button:hover { border-color:var(--navy); }
+
+  body.a11y-font, body.a11y-font * { font-family: Verdana, Geneva, sans-serif !important; }
+  /* les popups de celebration gardent la police d'origine, plus chaleureuse visuellement */
+  body.a11y-font .finale-content, body.a11y-font .finale-content * { font-family: Arial, Helvetica, sans-serif !important; }
+
+  .falc-simple-content { display:none; }
+  body.falc-mode .falc-normal-content { display:none; }
+  body.falc-mode .falc-simple-content { display:block; }
+
+  html, body { margin:0; padding:0; background:var(--bg); font-family: Arial, Helvetica, sans-serif; color:var(--navy); }
+  body { display:flex; justify-content:center; padding:40px 16px 60px; }
+  .page { width:100%; max-width:720px; }
+
+  body.a11y-contrast { background:#FFFFFF; }
+  body.a11y-contrast .page { color:#000000; }
+  body.a11y-contrast .welcome-message,
+  body.a11y-contrast .badges-title,
+  body.a11y-contrast .badge-name,
+  body.a11y-contrast .loading-msg { color:#000000 !important; }
+  body.a11y-contrast .account-panel,
+  body.a11y-contrast .badge-icon,
+  body.a11y-contrast .account-logout-btn { border-color:#000000 !important; }
+
+  .loading-msg { text-align:center; color:var(--navy-soft); font-size:15px; padding:60px 0; }
+
+  .account-panel {
+    background:var(--white); border:2px solid var(--track); border-radius:18px;
+    padding:26px 24px; margin-bottom:24px;
+  }
+
+  .welcome-hero { text-align:center; }
+  .welcome-character {
+    width:100%; max-width:340px; margin:0 auto 16px;
+    border-radius:18px; overflow:hidden;
+    background:linear-gradient(165deg, #16294D 0%, #1F3864 55%, #2C4A7C 100%);
+      box-shadow:
+      inset 2px 2px 0 rgba(255,255,255,0.22),
+      inset -2px -2px 0 rgba(0,0,0,0.35),
+      0 10px 22px -6px rgba(0,0,0,0.5),
+      0 2px 0 rgba(255,255,255,0.12);
+    border:2px solid #0E1626;
+  }
+  .welcome-character svg { width:100%; height:auto; display:block; }
+
+  /* etoiles du ciel de Mnemosia : elles respirent a des rythmes differents */
+  .fond-etoile { fill:url(#etoileRelief); filter:url(#lueurEtoileForte); opacity:0.8; transform-box:fill-box; transform-origin:center; animation:etoile-respire 3.2s ease-in-out infinite; }
+  .fond-etoile:nth-of-type(3n)   { animation-duration:4.6s; animation-delay:0.7s; }
+  .fond-etoile:nth-of-type(5n)   { animation-duration:2.7s; animation-delay:1.3s; }
+  .fond-etoile:nth-of-type(7n)   { animation-duration:5.9s; animation-delay:2.2s; }
+  .fond-etoile:nth-of-type(3n+1) { animation-duration:3.8s; animation-delay:1.9s; }
+  /* scintillement : la lumiere jaillit brievement, comme une vraie etoile */
+  @keyframes etoile-respire {
+    0%, 100% { opacity:0.3;  transform:scale(0.85); }
+    12%      { opacity:1;    transform:scale(1.35); }
+    22%      { opacity:0.55; transform:scale(0.95); }
+    38%      { opacity:0.95; transform:scale(1.2); }
+    52%      { opacity:0.4;  transform:scale(0.9); }
+    74%      { opacity:0.8;  transform:scale(1.1); }
+  }
+    50%      { opacity:0.9; }
+  }
+
+
+  .a11y-bar { position: sticky; top: 0; z-index: 500; box-shadow: 0 4px 14px -4px rgba(31,56,100,0.32); }
+
+  /* ---------- le bandeau ---------- */
+  .entete {
+    position: relative; border-radius: 20px; overflow: hidden;
+    padding: 28px 20px 24px; margin-bottom: 22px; text-align: center;
+    background: linear-gradient(165deg, #16294D 0%, #1F3864 55%, #2C4A7C 100%);
+    border: 2px solid #0E1626;
+    box-shadow:
+      inset 2px 2px 0 rgba(255,255,255,0.22),
+      inset -2px -2px 0 rgba(0,0,0,0.35),
+      0 10px 22px -6px rgba(0,0,0,0.5);
+  }
+  .etoile {
+    position: absolute; border-radius: 50%; background: #FFFFFF;
+    box-shadow: 0 0 5px rgba(255,255,255,0.55);
+    animation: scintille 3.6s ease-in-out infinite;
+  }
+  .etoile:nth-of-type(3n) { animation-duration: 4.8s; animation-delay: 0.6s; }
+  .etoile:nth-of-type(4n) { animation-duration: 2.9s; animation-delay: 1.4s; }
+  @keyframes scintille {
+    0%, 100% { opacity: 0.32; transform: scale(0.85); }
+    16%      { opacity: 1;    transform: scale(1.28); }
+    62%      { opacity: 0.6;  transform: scale(1.05); }
+  }
+  .entete-titre {
+    position: relative; z-index: 2;
+    font-size: calc(26px * var(--a11y-scale)); font-weight: 800; font-style: italic;
+    color: #FFFFFF; text-shadow: 0 2px 10px rgba(0,0,0,0.5); margin: 0 0 8px;
+  }
+  .entete-classe {
+    position: relative; z-index: 2;
+    font-size: calc(15px * var(--a11y-scale)); font-weight: 700;
+    color: #F0DCAE; margin: 0 0 6px;
+  }
+  .entete-sous {
+    position: relative; z-index: 2;
+    font-size: calc(14px * var(--a11y-scale)); font-weight: 600;
+    color: rgba(255,255,255,0.88); margin: 0;
+  }
+
+  /* ---------- les arcades ---------- */
+  h2.section-titre {
+    font-size: calc(17px * var(--a11y-scale)); font-weight: 800; margin: 0 0 12px;
+  }
+  .arcades { display: flex; flex-direction: column; gap: 12px; }
+  .arcade {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--white); border: 2px solid var(--track); border-radius: 16px;
+    padding: 15px 16px; text-decoration: none; color: var(--navy);
+    transition: border-color 0.16s ease, transform 0.12s ease, box-shadow 0.16s ease;
+    box-shadow: 0 2px 6px -2px rgba(31,56,100,0.2);
+  }
+  .arcade:hover {
+    border-color: var(--violet); transform: translateY(-2px);
+    box-shadow: 0 6px 14px -4px rgba(31,56,100,0.32);
+  }
+  .arcade:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .arcade-numero {
+    flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: calc(16px * var(--a11y-scale)); font-weight: 800; color: #FFFFFF;
+    background: linear-gradient(160deg, #7E5CB8 0%, #5E3E96 46%, #2A1848 100%);
+    border: 2px solid #12161E;
+    box-shadow: inset 2px 2px 0 rgba(200,180,236,0.34), inset -2px -2px 0 rgba(0,0,0,0.36);
+  }
+  .arcade-texte { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .arcade-titre { font-size: calc(15.5px * var(--a11y-scale)); font-weight: 800; }
+  .arcade-desc { font-size: calc(13px * var(--a11y-scale)); color: var(--navy-soft); line-height: 1.45; }
+  .arcade-fleche { font-size: 20px; color: var(--violet); flex-shrink: 0; font-weight: 700; }
+
+  /* une arcade encore fermee */
+  .arcade.a-venir {
+    background: #EFF1F6; border-style: dashed; cursor: default;
+    color: var(--navy-soft); box-shadow: none;
+  }
+  .arcade.a-venir:hover { transform: none; border-color: var(--track); box-shadow: none; }
+  .arcade.a-venir .arcade-numero { filter: grayscale(0.75) brightness(0.72); }
+  .arcade.a-venir .arcade-fleche { color: var(--navy-soft); }
+  .arcade-etiquette {
+    font-size: calc(12px * var(--a11y-scale)); font-weight: 700;
+    color: var(--navy-soft); background: #FFFFFF;
+    border: 1.5px solid var(--track); border-radius: 999px; padding: 4px 10px;
+  }
+
+  .pied-actions { display: flex; gap: 11px; flex-wrap: wrap; margin-top: 24px; }
+  .btn-pied {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: inherit; font-size: calc(14px * var(--a11y-scale)); font-weight: 700;
+    color: var(--navy-soft); background: var(--white);
+    border: 2px solid var(--track); border-radius: 999px;
+    padding: 11px 20px; text-decoration: none; cursor: pointer; min-height: 44px;
+  }
+  .btn-pied:hover { border-color: var(--navy); color: var(--navy); }
+  .btn-pied:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+  footer { text-align: center; font-size: calc(12px * var(--a11y-scale)); color: var(--navy-soft); margin-top: 26px; }
+  .chargement { text-align: center; padding: 60px 20px; color: var(--navy-soft); font-size: calc(15px * var(--a11y-scale)); }
+
+  body.a11y-contrast .arcade { border-color: #000000; }
+  body.a11y-contrast .arcade-desc, body.a11y-contrast .arcade-titre { color: #000000; }
+  body.a11y-contrast .btn-pied { border-color: #000000; color: #000000; }
+  body.a11y-contrast .entete { border-color: #000000; }
+
+  .falc-simple-content { display: none; }
+  body.falc-mode .falc-normal-content { display: none; }
+  body.falc-mode .falc-simple-content { display: block; }
+  body.falc-mode .arcade-desc, body.falc-mode .entete-sous { line-height: 1.85; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .etoile { animation: none !important; opacity: 0.8; }
+    .arcade { transition: none; }
+  }
+  body.anim-allegee .etoile { animation: none !important; opacity: 0.8; }
+
+  @media (max-width: 560px) {
+    .page { padding: 14px 12px 32px; }
+    .arcade { padding: 16px 14px; }
+    .btn-pied { min-height: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <a class="lien-evitement" href="#listeArcades">Aller directement à la liste des arcades</a>
+
+<div class="a11y-bar" id="a11yBar" role="region" aria-label="Options d'accessibilité">
+    <span class="a11y-bar-label">♿ Accessibilité</span>
+    <button type="button" id="a11yFontBtn" class="a11y-toggle-btn" aria-pressed="false">🔤 Police adaptée</button>
+    <button type="button" id="a11yContrastBtn" class="a11y-toggle-btn" aria-pressed="false">◐ Contraste renforcé</button>
+    <button type="button" id="falcModeBtn" class="a11y-toggle-btn" aria-pressed="false" title="Facile à Lire et à Comprendre : simplifie le texte de la page">📖 Mode FALC</button>
+    <button type="button" id="hoverReadBtn" class="a11y-toggle-btn" aria-pressed="false" title="Lit à voix haute le nom et la description de chaque outil quand la souris passe dessus">🔊 Lecture au survol</button>
+    <button type="button" id="animAllegeeBtn" class="a11y-toggle-btn" aria-pressed="false" title="Réduit les mouvements à l'écran : le personnage et le décor bougent beaucoup moins">🎬 Alléger les animations</button>
+    <div class="a11y-size-group" role="group" aria-label="Taille du texte">
+      <span>Taille du texte</span>
+      <button type="button" id="a11ySizeDown" class="a11y-size-btn" aria-label="Réduire la taille du texte">A−</button>
+      <button type="button" id="a11ySizeReset" class="a11y-size-btn" aria-label="Taille du texte par défaut">A</button>
+      <button type="button" id="a11ySizeUp" class="a11y-size-btn" aria-label="Agrandir la taille du texte">A+</button>
+    </div>
+  </div>
+
+  <p class="chargement" id="chargement">Connexion en cours…</p>
+
+  <div id="contenu" hidden>
+
+    <div class="entete">
+      <span class="etoile" style="left:8%;  top:16%; width:3px;   height:3px;"></span>
+      <span class="etoile" style="left:22%; top:34%; width:2.4px; height:2.4px;"></span>
+      <span class="etoile" style="left:36%; top:12%; width:3.4px; height:3.4px;"></span>
+      <span class="etoile" style="left:52%; top:26%; width:2.8px; height:2.8px;"></span>
+      <span class="etoile" style="left:66%; top:14%; width:3.2px; height:3.2px;"></span>
+      <span class="etoile" style="left:79%; top:32%; width:2.6px; height:2.6px;"></span>
+      <span class="etoile" style="left:91%; top:18%; width:3.6px; height:3.6px;"></span>
+      <span class="etoile" style="left:14%; top:62%; width:3px;   height:3px;"></span>
+      <span class="etoile" style="left:44%; top:74%; width:2.6px; height:2.6px;"></span>
+      <span class="etoile" style="left:74%; top:66%; width:3.2px; height:3.2px;"></span>
+      <h1 class="entete-titre">🕹️ Les Arcades de Mnémosia</h1>
+      <p class="entete-classe">BTS CJN 2e année</p>
+      <p class="entete-sous">
+        <span class="falc-normal-content">Chaque chapitre a son arcade : le cours à écouter, à lire, à jouer.</span>
+        <span class="falc-simple-content">Chaque chapitre a sa page de jeux.<br>Choisis un chapitre.</span>
+      </p>
+    </div>
+
+    <main id="contenuArcades">
+      <h2 class="section-titre">📚 Tes arcades</h2>
+      <div class="arcades" id="listeArcades"></div>
+
+      <div class="pied-actions">
+        <a class="btn-pied" href="https://rbrdingenierie-ui.github.io/accueil_outils/"
+           title="Ouvrir l'espace de révision"
+           aria-label="Mon espace de révision — ouvrir le village de Mnémosia">🚀 Mon espace de révision</a>
+        <button type="button" class="btn-pied" id="btnDeconnexion"
+                title="Se déconnecter"
+                aria-label="Retour sur la planète Terre — se déconnecter de ton espace">🌍 Retour sur la planète Terre</button>
+      </div>
+    </main>
+
+    <footer>Benjamin RICHARD — Tous droits réservés</footer>
+  </div>
+</div>
+
+<script>
+
+(function () {
+  const A11Y_PREFS_KEY = 'accueil-outils-a11y-prefs-v1';
+  let a11yPrefs = { font: false, contrast: false, scale: 1, falc: false, hoverRead: false, animAllegee: false };
+  try {
+    const raw = localStorage.getItem(A11Y_PREFS_KEY);
+    if (raw) a11yPrefs = Object.assign(a11yPrefs, JSON.parse(raw));
+  } catch (e) {}
+  function saveA11yPrefs() {
+    try { localStorage.setItem(A11Y_PREFS_KEY, JSON.stringify(a11yPrefs)); } catch (e) {}
+  }
+  function applyA11yPrefs() {
+    document.body.classList.toggle('a11y-font', a11yPrefs.font);
+    document.body.classList.toggle('a11y-contrast', a11yPrefs.contrast);
+    document.body.classList.toggle('falc-mode', a11yPrefs.falc);
+    document.documentElement.style.setProperty('--a11y-scale', a11yPrefs.scale);
+    document.getElementById('a11yFontBtn').setAttribute('aria-pressed', a11yPrefs.font ? 'true' : 'false');
+    document.getElementById('a11yContrastBtn').setAttribute('aria-pressed', a11yPrefs.contrast ? 'true' : 'false');
+    document.getElementById('falcModeBtn').setAttribute('aria-pressed', a11yPrefs.falc ? 'true' : 'false');
+    document.getElementById('hoverReadBtn').setAttribute('aria-pressed', a11yPrefs.hoverRead ? 'true' : 'false');
+    document.body.classList.toggle('anim-allegee', a11yPrefs.animAllegee);
+    const btnAnim = document.getElementById('animAllegeeBtn');
+    if (btnAnim) btnAnim.setAttribute('aria-pressed', a11yPrefs.animAllegee ? 'true' : 'false');
+  }
+  document.getElementById('a11yFontBtn').addEventListener('click', () => { a11yPrefs.font = !a11yPrefs.font; applyA11yPrefs(); saveA11yPrefs(); });
+  document.getElementById('a11yContrastBtn').addEventListener('click', () => { a11yPrefs.contrast = !a11yPrefs.contrast; applyA11yPrefs(); saveA11yPrefs(); });
+  document.getElementById('falcModeBtn').addEventListener('click', () => {
+    a11yPrefs.falc = !a11yPrefs.falc;
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    applyA11yPrefs(); saveA11yPrefs();
+  });
+  document.getElementById('hoverReadBtn').addEventListener('click', () => {
+    a11yPrefs.hoverRead = !a11yPrefs.hoverRead;
+    if (!a11yPrefs.hoverRead && window.speechSynthesis) window.speechSynthesis.cancel();
+    applyA11yPrefs(); saveA11yPrefs();
+  });
+  // reduit les mouvements a l'ecran, pour qui est gene par les animations
+  const btnAnimAllegee = document.getElementById('animAllegeeBtn');
+  if (btnAnimAllegee) {
+    btnAnimAllegee.addEventListener('click', () => {
+      a11yPrefs.animAllegee = !a11yPrefs.animAllegee;
+      applyA11yPrefs(); saveA11yPrefs();
+    });
+  }
+  document.getElementById('a11ySizeUp').addEventListener('click', () => { a11yPrefs.scale = Math.min(1.6, Math.round((a11yPrefs.scale + 0.15) * 100) / 100); applyA11yPrefs(); saveA11yPrefs(); });
+  document.getElementById('a11ySizeDown').addEventListener('click', () => { a11yPrefs.scale = Math.max(0.85, Math.round((a11yPrefs.scale - 0.15) * 100) / 100); applyA11yPrefs(); saveA11yPrefs(); });
+  document.getElementById('a11ySizeReset').addEventListener('click', () => { a11yPrefs.scale = 1; applyA11yPrefs(); saveA11yPrefs(); });
+  applyA11yPrefs();
+
+  // ---- lecture au survol, sur l'integralite de la page ----
+  function attachHoverRead(el, getText) {
+    if (el.dataset.hoverReadAttached) return; // evite les doublons d'ecouteurs
+    el.dataset.hoverReadAttached = '1';
+    el.addEventListener('mouseenter', () => {
+      if (!a11yPrefs.hoverRead || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      // pour un bouton purement graphique (une croix par exemple), l'etiquette
+      // accessible est plus parlante que le symbole lui-meme
+      const text = getText ? getText() : (el.getAttribute('aria-label') || el.textContent.trim());
+      if (!text) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'fr-FR'; utter.rate = 0.95;
+      window.speechSynthesis.speak(utter);
+    });
+    el.addEventListener('mouseleave', () => { if (window.speechSynthesis) window.speechSynthesis.cancel(); });
+    el.addEventListener('focusin', () => { if (a11yPrefs.hoverRead) el.dispatchEvent(new Event('mouseenter')); });
+    el.addEventListener('focusout', () => { if (window.speechSynthesis) window.speechSynthesis.cancel(); });
+  }
+
+  if ('speechSynthesis' in window) {
+    // cartes d'outils et de retour : nom + description assembles (pas le texte du bouton CTA)
+    document.querySelectorAll('.tool-card, .feedback-card').forEach(card => {
+      attachHoverRead(card, () => {
+        const nameEl = card.querySelector('.tool-card-name, .feedback-card-title');
+        const descEl = card.querySelector('.tool-card-desc, .feedback-card-desc');
+        return [nameEl && nameEl.textContent, descEl && descEl.textContent].filter(Boolean).join('. ');
+      });
+    });
+
+    // reste de la page : titres, messages, boutons, reglages -- tout element porteur de texte utile
+    const GENERIC_HOVER_SELECTOR = 'h1, h2, p, .entete-titre, .entete-classe, .entete-sous, .section-titre, .arcade-titre, .arcade-desc, .arcade-etiquette, .btn-pied, .a11y-toggle-btn, .a11y-bar-label, .lien-evitement, footer';
+    document.querySelectorAll(GENERIC_HOVER_SELECTOR).forEach(el => attachHoverRead(el));
+
+    // badges : regeneres a chaque rendu, on reattachera donc a chaque appel de renderBadges
+    window.attachBadgeHoverRead = function () {
+      document.querySelectorAll('.badge-item').forEach(el => {
+        attachHoverRead(el, () => {
+          const nameEl = el.querySelector('.badge-name');
+          return nameEl ? nameEl.textContent + (el.classList.contains('locked') ? ', pas encore débloqué' : ', débloqué') : '';
+        });
+      });
+    };
+    window.attachBadgeHoverRead();
+
+    // permet au script principal d'attacher la lecture au survol a du contenu cree
+    // apres coup, par exemple la liste des badges dans le popup de felicitations
+    window.attachHoverReadAll = function (root) {
+      (root || document).querySelectorAll(GENERIC_HOVER_SELECTOR + ', .new-badge-name, .new-badge-desc').forEach(el => attachHoverRead(el));
+    };
+  }
+
+  // ---- barre d'accessibilite figee au defilement ----
+  // Elle reste atteignable a tout moment : un apprenant qui a besoin d'agrandir le texte
+  // ne doit pas avoir a remonter en haut de page pour le faire.
+  (function figerBarreA11y() {
+    const barre = document.getElementById('a11yBar');
+    const espace = document.getElementById('a11yBarEspace');
+    if (!barre || !espace) return;
+
+    let hauteurBarre = 0;
+    let positionDeclenchement = 0;
+
+    function mesurer() {
+      // mesure faite hors etat fige, sinon la position serait faussee
+      if (barre.classList.contains('figee')) return;
+      hauteurBarre = barre.offsetHeight;
+      positionDeclenchement = barre.getBoundingClientRect().top + window.scrollY;
+    }
+
+    function verifier() {
+      if (window.scrollY > positionDeclenchement) {
+        if (!barre.classList.contains('figee')) {
+          espace.style.height = hauteurBarre + 'px';
+          espace.classList.add('actif');
+          barre.classList.add('figee');
+        }
+      } else if (barre.classList.contains('figee')) {
+        barre.classList.remove('figee');
+        espace.classList.remove('actif');
+        mesurer();
+      }
+    }
+
+    mesurer();
+    window.addEventListener('scroll', verifier, { passive: true });
+    window.addEventListener('resize', () => {
+      // au redimensionnement, la barre change de hauteur : on remesure a froid
+      const etaitFigee = barre.classList.contains('figee');
+      barre.classList.remove('figee');
+      espace.classList.remove('actif');
+      mesurer();
+      if (etaitFigee) verifier();
+    });
+  })();
+
+  // memoriser qu'on part vers un outil, pour revenir au bon endroit avec le bouton "precedent" du navigateur
+  // la description s'affiche au-dessus de la demeure, sauf pour la premiere rangee
+  // ou elle sortirait du cadre : dans ce cas elle bascule en dessous.
+  (function placerDescriptions() {
+    const cartes = [...document.querySelectorAll('.tool-card')];
+    if (cartes.length === 0) return;
+    function ajuster() {
+      const grille = document.querySelector('.tools-grid');
+      if (!grille) return;
+      const hautGrille = grille.getBoundingClientRect().top;
+      const rectGrille = grille.getBoundingClientRect();
+      const basGrille = grille.getBoundingClientRect().bottom;
+      cartes.forEach(c => {
+        const r = c.getBoundingClientRect();
+        // la bulle va en dessous seulement s'il n'y a pas la place au-dessus
+        // ET qu'il y a la place en dessous
+        const placeDessus = r.top - hautGrille >= 110;
+        const placeDessous = basGrille - r.bottom >= 110;
+        c.classList.toggle('desc-dessous', !placeDessus && placeDessous);
+
+      });
+    }
+
+    // la position de la bulle se calcule au moment de l'affichage : avant cela
+    // elle est masquee et ses dimensions ne sont pas fiables.
+    function placerBulle(carte) {
+      const bulle = carte.querySelector('.tool-card-desc');
+      const grille = document.querySelector('.tools-grid');
+      if (!bulle || !grille) return;
+      bulle.style.marginLeft = '0px';
+      const rg = grille.getBoundingClientRect();
+      const rb = bulle.getBoundingClientRect();
+      let d = 0;
+      if (rb.left < rg.left + 22) d = (rg.left + 22) - rb.left;
+      else if (rb.right > rg.right - 22) d = (rg.right - 22) - rb.right;
+      if (d !== 0) bulle.style.marginLeft = Math.round(d) + 'px';
+    }
+    // placer les bulles des le depart, puis a chaque survol et redimensionnement
+    function placerToutesLesBulles() {
+      cartes.forEach(c => {
+        const b = c.querySelector('.tool-card-desc');
+        if (!b) return;
+        // rendre la bulle mesurable le temps du calcul
+        const visInit = b.style.visibility, opInit = b.style.opacity;
+        b.style.visibility = 'hidden'; b.style.opacity = '0'; b.style.display = 'block';
+        placerBulle(c);
+        b.style.visibility = visInit; b.style.opacity = opInit; b.style.display = '';
+      });
+    }
+    placerToutesLesBulles();
+    window.addEventListener('resize', placerToutesLesBulles);
+    cartes.forEach(c => {
+      c.addEventListener('mouseenter', () => placerBulle(c));
+      c.addEventListener('focusin', () => placerBulle(c));
+    });
+    ajuster();
+    window.addEventListener('resize', ajuster);
+  })();
+
+  // sur telephone, le survol n'existe pas : un premier appui revele la description,
+  // un second ouvre l'outil. Au clavier et a la souris, le comportement reste direct.
+  const surTactile = window.matchMedia('(hover: none)').matches;
+  if (surTactile) {
+    document.querySelectorAll('.tool-card').forEach(carte => {
+      const lien = carte.querySelector('.tool-card-cta');
+      if (!lien) return;
+      lien.addEventListener('click', (ev) => {
+        if (!carte.classList.contains('revele')) {
+          ev.preventDefault();
+          document.querySelectorAll('.tool-card.revele').forEach(c => c.classList.remove('revele'));
+          carte.classList.add('revele');
+        }
+      });
+    });
+  }
+
+  const toolsGrid = document.querySelector('.tools-grid');
+  if (toolsGrid) {
+    toolsGrid.addEventListener('click', (e) => {
+      const link = e.target.closest('.tool-card-cta');
+      if (link) {
+        try { sessionStorage.setItem('accueil-retour-outils', '1'); } catch (err) {}
+      }
+    });
+  }
+})();
+
+</script>
+
+<script type="module">
+// ============================================================
+//  LE MENU DES ARCADES
+//
+//  POUR AJOUTER UN CHAPITRE : ajoutez une ligne dans ARCADES.
+//  - lien : l'adresse complete de l'arcade,
+//           ou null si le chapitre n'est pas encore ouvert.
+//  Rien d'autre a modifier.
+// ============================================================
+
+const CLASSE = "BTSCJN22627";
+
+const ARCADES = [
+  { numero: 1, titre: "Apprendre à apprendre",
+    desc: "Podcast, bande dessinée, jeux, flashcards et quiz.",
+    lien: "https://rbrdingenierie-ui.github.io/arcade/" },
+  { numero: 2, titre: "Chapitre 2",
+    desc: "Bientôt disponible.",
+    lien: null },
+  { numero: 3, titre: "Chapitre 3",
+    desc: "Bientôt disponible.",
+    lien: null },
+];
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut as fbSignOut }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCOMITn8IIbp6HFDIsmVp2yJkq5FG7MdUk",
+  authDomain: "boite-outils-apprendre.firebaseapp.com",
+  projectId: "boite-outils-apprendre",
+  storageBucket: "boite-outils-apprendre.firebasestorage.app",
+  messagingSenderId: "410422833113",
+  appId: "1:410422833113:web:cc718e2fb4312dc17ab3c8"
+};
+
+// La page de connexion des arcades. Le nom du dossier lui est transmis :
+// c'est ainsi qu'elle sait dans quelle classe renvoyer l'eleve apres connexion.
+const CONNEXION_URL = "../connexion.html?retour=BTSCJN22627";
+const MENU_URL = "https://rbrdingenierie-ui.github.io/menu_revision/";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+function dessinerArcades() {
+  const liste = document.getElementById("listeArcades");
+  liste.innerHTML = "";
+
+  ARCADES.forEach(a => {
+    const ouverte = !!a.lien;
+    const el = document.createElement(ouverte ? "a" : "div");
+    el.className = "arcade" + (ouverte ? "" : " a-venir");
+
+    if (ouverte) {
+      el.href = a.lien;
+      el.setAttribute("aria-label",
+        "Chapitre " + a.numero + " : " + a.titre + ". " + a.desc);
+    } else {
+      // une arcade fermee n'est pas un lien : rien a activer, rien a annoncer
+      el.setAttribute("aria-label",
+        "Chapitre " + a.numero + " : " + a.titre + ". Pas encore disponible.");
+    }
+
+    el.innerHTML =
+      '<span class="arcade-numero" aria-hidden="true">' + a.numero + '</span>'
+      + '<span class="arcade-texte">'
+      +   '<span class="arcade-titre">' + a.titre + '</span>'
+      +   '<span class="arcade-desc">' + a.desc + '</span>'
+      + '</span>'
+      + (ouverte
+          ? '<span class="arcade-fleche" aria-hidden="true">→</span>'
+          : '<span class="arcade-etiquette">🔒 Bientôt</span>');
+
+    liste.appendChild(el);
+  });
+
+  if (typeof attachHoverReadAll === "function") attachHoverReadAll();
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = CONNEXION_URL;
+    return;
+  }
+  document.getElementById("chargement").hidden = true;
+  document.getElementById("contenu").hidden = false;
+  dessinerArcades();
+});
+
+document.getElementById("btnDeconnexion").addEventListener("click", async () => {
+  try {
+    // les popups d'accueil doivent saluer a nouveau a la prochaine connexion
+    sessionStorage.removeItem("accueil-popup-vu-session");
+    sessionStorage.removeItem("ludo-accueil-vu");
+    Object.keys(sessionStorage).forEach(cle => {
+      if (cle.indexOf("habitant-vu-") === 0) sessionStorage.removeItem(cle);
+    });
+  } catch (e) {}
+  await fbSignOut(auth);
+  window.location.href = CONNEXION_URL;
+});
+</script>
+
+</body>
+</html>
